@@ -1,0 +1,30 @@
+create table person
+(
+person_id serial primary key,
+first_name varchar(64) not null,
+last_name varchar(64) not null
+);
+
+create table possport
+(
+passport_id serial primary key,
+serial_number int not null,
+fk_passport_person int references person(person_id)
+);
+
+insert into person
+values
+(1,'jhon', 'Snow'),
+(2,'Ned', 'Stark'),
+(3,'Rob', 'Baratheon');
+
+alter table possport
+add column registration varchar(64) not null
+
+insert into possport 
+values
+(1,546464,1,'Winterfall'),
+(2,54345464,2, 'Winterfal1'),
+(3,5633354,3,'King''s Landing')
+
+
