@@ -10,4 +10,16 @@ create table book
 book_id serial primary key,
 title text not null,
 isbn varchar(32) not null
-)
+);
+alter table book
+add columnt fk_publisher_id int;
+
+update book
+set fk_publisher_id = 1
+where fk_publisher_id is null;
+
+
+ALTER TABLE book
+ADD CONSTRAINT fk_book_publisher
+FOREIGN KEY (fk_publisher_id) REFERENCES publisher(publisher_id);
+
