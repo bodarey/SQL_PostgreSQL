@@ -16,19 +16,19 @@ module Library
      "
     when 4  # Выбрать все уникальные города в которых "зарегестрированы" заказчики
       return "
-     SELECT DISTINCT ship_city FROM orders
+     SELECT DISTINCT city FROM customers
      "
     when 5  # Выбрать все уникальные сочетания городов и стран в которых "зарегестрированы" заказчики
       return "
-     SELECT DISTINCT(ship_city, ship_country) as city_country FROM orders
+     SELECT DISTINCT(city,country) as city_country FROM customers
      "
     when 6  # Посчитать кол-во заказчиков
       return "
-     SELECT count(customer_id) as count_customers FROM orders
+     SELECT count(customer_id) as count_customers FROM customers
      "
     when 7  # Посчитать кол-во уникальных стран в которых "зарегестрированы" заказчики
       return "
-     SELECT count(Distinct ship_country) as countries_customers FROM orders
+     SELECT count(Distinct country) as countries_customers FROM customers
      "
     end
 
