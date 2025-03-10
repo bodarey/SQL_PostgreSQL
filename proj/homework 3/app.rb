@@ -20,7 +20,7 @@ begin
 
   # Execute a SELECT query
   # result = conn.exec('select * from categories')
-  1.upto(7) do |i|
+  9.upto(9) do |i|
     result = conn.exec(Library.query(i))
     puts '--------------------------'
     puts "data from query number #{i} "

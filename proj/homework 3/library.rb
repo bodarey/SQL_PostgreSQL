@@ -3,45 +3,86 @@
 module Library
   def self.query(param)
     case param
-    when 1 # 1. Выбрать все заказы из стран France, Austria, Spain
+    when 1 # 1.Выбрать все записи заказов в которых наименование страны отгрузки начинается с 'U'
       return "
       SELECT *
       FROM orders
-      WHERE ship_country IN ('France', 'Austria', 'Spain')
+      WHERE ship_country LIKE 'U%'
       "
-    when 2  # Выбрать все заказы, отсортировать по required_date 
-      #(по убыванию) и отсортировать по дате отгрузке (по возрастанию)
+    when 2 # Выбрать записи заказов (включить колонки идентификатора заказа, идентификатора заказчика,
+      # веса и страны отгузки), которые должны быть отгружены в страны имя которых начинается с 'N',
+      # отсортировать по весу (по убыванию) и вывести только первые 10 записей.
       return "
-     SELECT * 
+     SELECT order_id, customer_id, freight, ship_country
      FROM orders
-     ORDER BY required_date DESC, shipped_date ASC 
+     Where ship_country LIKE 'N%'
+     ORDER BY freight DESC
+     LIMIT 10
      "
-    when 3 # Выбрать минимальное кол-во  единиц товара среди тех продуктов, которых в продаже более 30 единиц.
+    when 3 # Выбрать записи работников (включить колонки имени, фамилии, телефона, региона) в которых регион неизвестен
       return "
-     SELECT MIN(units_on_order) 
-     FROM products  
-     WHERE units_on_order > 30
+     SELECT first_name, last_name, region, home_phone
+     FROM employees
+     WHERE region is null
      "
-    when 4  # Выбрать максимальное кол-во единиц товара среди тех продуктов, которых в продаже более 30 единиц.
+    when 4  # Подсчитать кол-во заказчиков регион которых известен
       return "
-     SELECT MAX(units_on_order) 
-     FROM products  
-     WHERE units_on_order > 30
+     SELECT COUNT(customer_id)
+     FROM customers
+     WHERE region is not null
      "
-    when 5  # Найти среднее значение дней уходящих на доставку с даты формирования заказа в USA
+    when 5  # Подсчитать кол-во поставщиков в каждой из стран и отсортировать результаты группировки по убыванию кол-ва
       return "
-     SELECT AVG(required_date - shipped_date)
+     SELECT country, count(country) as number_of_suppliers
+     FROM suppliers
+     Group by country
+     order by count(country) DESC
+     "
+    when 6  # Подсчитать суммарный вес заказов (в которых известен регион)
+      # по странам, затем отфильтровать по суммарному весу (вывести только те записи где
+      # суммарный вес больше 2750) и отсортировать по убыванию суммарного веса.
+      return "
+     SELECT ship_country, SUM(freight) total_freight
      FROM orders
-     WHERE ship_country ='USA'
+     WHERE ship_region is not null
+     group by ship_country
+     HAVING sum(freight) > 2750
+     order by sum(freight)
      "
-    when 6  # Найти сумму, на которую имеется товаров (кол-во * цену)
-            # причём таких, которые планируется продавать и в будущем (см. на поле discontinued)
+    when 7 # Выбрать все уникальные страны заказчиков и поставщиков и отсортировать страны по возрастанию
       return "
-     SELECT SUM(unit_price * units_in_stock)
-     FROM products  
-     WHERE discontinued <> 1
+     SELECT country
+     FROM customers
+     INTERSECT
+     SELECT country
+     FROM suppliers
+     order by country
      "
-    
+    when 8  # Выбрать такие страны в которых "зарегистированы" одновременно и заказчики и поставщики и работники.
+      return "
+     SELECT country
+     FROM customers
+     INTERSECT
+     SELECT country
+     FROM suppliers
+     INTERSECT
+     SELECT country
+     from employees
+     order by country
+     "
+    when 9  # Выбрать такие страны в которых "зарегистированы"
+      # одновременно заказчики и поставщики, но при этом в них не "зарегистрированы" работники.
+      return "
+     SELECT country
+     FROM customers
+     INTERSECT
+     SELECT country
+     FROM suppliers
+     EXCEPT
+     SELECT country
+     from employees
+     order by country
+     "
     end
 
     'SELECT current_database();'
