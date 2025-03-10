@@ -47,13 +47,13 @@ module Library
      WHERE ship_region is not null
      group by ship_country
      HAVING sum(freight) > 2750
-     order by sum(freight)
+     order by sum(freight) desc
      "
     when 7 # Выбрать все уникальные страны заказчиков и поставщиков и отсортировать страны по возрастанию
       return "
      SELECT country
      FROM customers
-     INTERSECT
+     union
      SELECT country
      FROM suppliers
      order by country
@@ -81,7 +81,7 @@ module Library
      EXCEPT
      SELECT country
      from employees
-     order by country
+     
      "
     end
 
