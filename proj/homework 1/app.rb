@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'pg'
 require 'json'
-require_relative 'library.rb'
+require_relative 'library'
 
-#puts str
+# puts str
 
 # Connection parameters
 conn_params = {
@@ -17,26 +19,22 @@ begin
   conn = PG.connect(conn_params)
 
   # Execute a SELECT query
-  #result = conn.exec('select * from categories') 
-  1.upto(7) do |i|
+  # result = conn.exec('select * from categories')
+  1.upto(8) do |i|
     result = conn.exec(Library.query(i))
     puts '--------------------------'
     puts "data from query number #{i} "
-    puts 
-  
-  # Iterate over the result set and print each row
-  result.each do |row|
-    #puts row.to_json
-     puts row
+    puts
+
+    # Iterate over the result set and print each row
+    result.each do |row|
+      # puts row.to_json
+      puts row
+    end
   end
-end
 rescue PG::Error => e
   puts "An error occurred: #{e.message}"
 ensure
   # Close the connection
-  conn.close if conn
+  conn&.close
 end
-
-
-
-
