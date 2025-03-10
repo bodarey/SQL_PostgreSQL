@@ -42,6 +42,6 @@ end
 
 
 #puts " #{k} #{v}"   
-puts hh
+puts JSON.pretty_generate(hh)
 
 
