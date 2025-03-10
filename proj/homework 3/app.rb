@@ -3,7 +3,7 @@
 require 'pg'
 require 'json'
 require_relative 'library'
-hh = []
+
 # puts str
 
 # Connection parameters
@@ -20,14 +20,16 @@ begin
 
   # Execute a SELECT query
   # result = conn.exec('select * from categories')
-  1.upto(8) do |i|
+  1.upto(7) do |i|
     result = conn.exec(Library.query(i))
-   
+    puts '--------------------------'
+    puts "data from query number #{i} "
+    puts
 
     # Iterate over the result set and print each row
     result.each do |row|
-      hh << row
-      
+      # puts row.to_json
+      puts row
     end
   end
 rescue PG::Error => e
@@ -36,12 +38,3 @@ ensure
   # Close the connection
   conn&.close
 end
-
-#puts hh.to_json
-#puts JSON.pretty_generate(hh)
-
-
-#puts " #{k} #{v}"   
-puts hh
-
-
