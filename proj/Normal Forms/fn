@@ -1,0 +1,159 @@
+Formele normale în SQL: 1NF, 2NF și 3NF
+
+Formele normale sunt reguli de proiectare a bazelor de date relationale care ajută la organizarea eficientă a datelor și evitarea anomalilor.
+1. Prima Formă Normală (1NF)
+
+Definiție: O relație este în 1NF dacă:
+
+    Toate atributele conțin doar valori atomice (indivizibile)
+
+    Nu există grupuri repetitive de date (n-tupluri)
+
+    Toate intrările dintr-o coloană sunt de același tip
+
+Exemplu:
+sql
+Copy
+
+-- Nu este 1NF (telefoane multiple într-o singură celulă)
+CREATE TABLE Clienti (
+    ID INT PRIMARY KEY,
+    Nume VARCHAR(100),
+    Telefon VARCHAR(200) -- poate conține "0722-123456, 021-456789"
+);
+
+-- Este 1NF
+CREATE TABLE Clienti (
+    ID INT PRIMARY KEY,
+    Nume VARCHAR(100)
+);
+
+CREATE TABLE TelefoaneClienti (
+    ID INT PRIMARY KEY,
+    ClientID INT,
+    Telefon VARCHAR(20),
+    FOREIGN KEY (ClientID) REFERENCES Clienti(ID)
+);
+
+2. A Doua Formă Normală (2NF)
+
+Definiție: O relație este în 2NF dacă:
+
+    Este deja în 1NF
+
+    Toate atributele ne-cheie depind de întreaga cheie primară (nu doar de o parte din ea)
+
+Exemplu:
+sql
+Copy
+
+-- Nu este 2NF (NumeDepozit depinde doar de DepozitID, nu de cheia compusă)
+CREATE TABLE ProduseDepozite (
+    ProdusID INT,
+    DepozitID INT,
+    Cantitate INT,
+    NumeDepozit VARCHAR(100),
+    PRIMARY KEY (ProdusID, DepozitID)
+);
+
+-- Este 2NF (separată în două tabele)
+CREATE TABLE Depozite (
+    DepozitID INT PRIMARY KEY,
+    NumeDepozit VARCHAR(100)
+);
+
+CREATE TABLE ProduseDepozite (
+    ProdusID INT,
+    DepozitID INT,
+    Cantitate INT,
+    PRIMARY KEY (ProdusID, DepozitID),
+    FOREIGN KEY (DepozitID) REFERENCES Depozite(DepozitID)
+);
+
+3. A Treia Formă Normală (3NF)
+
+Definiție: O relație este în 3NF dacă:
+
+    Este deja în 2NF
+
+    Nu există dependențe tranzitive (niciun atribut ne-cheie nu depinde de alt atribut ne-cheie)
+
+Exemplu:
+sql
+Copy
+
+-- Nu este 3NF (Oras depinde de CodPostal, care depinde de ClientID)
+CREATE TABLE Clienti (
+    ClientID INT PRIMARY KEY,
+    Nume VARCHAR(100),
+    CodPostal VARCHAR(10),
+    Oras VARCHAR(50)
+);
+
+-- Este 3NF (separată în două tabele)
+CREATE TABLE CoduriPostale (
+    CodPostal VARCHAR(10) PRIMARY KEY,
+    Oras VARCHAR(50)
+);
+
+CREATE TABLE Clienti (
+    ClientID INT PRIMARY KEY,
+    Nume VARCHAR(100),
+    CodPostal VARCHAR(10),
+    FOREIGN KEY (CodPostal) REFERENCES CoduriPostale(CodPostal)
+);
+
+Beneficii ale normalizării:
+
+    Eliminarea redundanței datelor
+
+    Prevenirea anomalilor la inserare/actualizare/ștergere
+
+    Îmbunătățirea integrității datelor
+
+Formele normale superioare (BCNF, 4NF, 5NF) abordează dependențe mai complexe, dar 3NF este suficientă pentru majoritatea aplicațiilor practice.
+ce Este atribut
+Atribut în baze de date relationale
+
+Un atribut în contextul bazelor de date relationale și SQL reprezintă o coloană într-o tabelă, care descrie o caracteristică sau o proprietate a entității reprezentate de tabelă.
+Caracteristicile unui atribut:
+
+    Reprezintă o caracteristică a entității stocate în tabelă
+
+    Are un nume unic în cadrul tabelei
+
+    Are un tip de date definit (INT, VARCHAR, DATE etc.)
+
+    Poate avea constrângeri (NOT NULL, UNIQUE, PRIMARY KEY etc.)
+
+Exemplu practic:
+sql
+Copy
+
+CREATE TABLE Angajati (
+    ID INT PRIMARY KEY,            -- atribut cheie primară
+    Nume VARCHAR(50) NOT NULL,    -- atribut cu constrângere NOT NULL
+    Prenume VARCHAR(50),          -- atribut simplu
+    DataNasterii DATE,            -- atribut de tip dată
+    Salariu DECIMAL(10,2)         -- atribut numeric
+);
+
+În acest exemplu:
+
+    ID, Nume, Prenume, DataNasterii și Salariu sunt atribute ale tabelei Angajati
+
+Tipuri de atribute:
+
+    Atribute simple - nu pot fi divizate în sub-componente (ex: Vârsta)
+
+    Atribute compuse - pot fi divizate (ex: Adresă → Stradă, Oraș, Țară)
+
+    Atribute monovalente - conțin o singură valoare
+
+    Atribute multivalente - pot conține multiple valori (ar trebui evitate în SQL)
+
+    Atribute derivate - calculate din alte atribute (ex: Vârsta calculată din DataNașterii)
+
+În procesul de normalizare, atributele compuse sau multivalente sunt descompuse pentru a ajunge la prima formă normală (1NF).
+
+
