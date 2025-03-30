@@ -1,3 +1,17 @@
 3.  Создать представление "активных" (discontinued = 0) продуктов, содержащее все колонки. Представление должно быть защищено от вставки записей, в которых discontinued = 1.
 
 Попробовать сделать вставку записи с полем discontinued = 1 - убедиться, что не проходит.
+
+---------------------
+
+create view myView as
+select * 
+from products
+where discontinued = 0
+with local check option
+
+insert into myView
+values (82, 'Chai',	8,	1,	'10 boxes x 30 bags',	18.0,	39,	0,	10,	1
+)
+
+SQL Error [44000]: ERROR: new row violates check option for view "myview"
