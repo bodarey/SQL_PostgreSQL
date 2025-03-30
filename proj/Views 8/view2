@@ -1,0 +1,35 @@
+2. Создать представление, которое выводит следующие колонки:
+
+order_date, required_date, shipped_date, ship_postal_code, ship_country, company_name, contact_name, phone, last_name, first_name, title из таблиц orders, customers, employees.
+
+Попробовать добавить к представлению (после его создания) колонки ship_country, postal_code и reports_to. Убедиться, что проихсодит ошибка. Переименовать представление и создать новое уже с дополнительными колонками.
+
+Сделать к нему запрос, выбрав все записи, отсортировав их по ship_county.
+
+Удалить переименованное представление.
+-------------------------------------------------
+
+
+drop view myView
+
+create or replace view myView as
+select order_date, required_date, shipped_date, ship_postal_code, ship_country, company_name, contact_name, phone, last_name, first_name, title
+from orders
+join customers on orders.customer_id = customers.customer_id
+join employees on orders.employee_id = employees.employee_id
+
+
+
+create or replace view newView as
+select order_date, required_date, shipped_date, ship_postal_code, ship_country, company_name, contact_name, phone, last_name, first_name, title, employees.postal_code, reports_to
+from orders
+join customers on orders.customer_id = customers.customer_id
+join employees on orders.employee_id = employees.employee_id
+
+
+select * from newView
+order by ship_country
+
+drop view newView
+
+
