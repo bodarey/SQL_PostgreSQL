@@ -1,0 +1,16 @@
+1. Создать представление, которое выводит следующие колонки:
+
+order_date, required_date, shipped_date, ship_postal_code, company_name, contact_name, phone, last_name, first_name, title из таблиц orders, customers и employees.
+
+Сделать select к созданному представлению, выведя все записи, где order_date больше 1го января 1997 года.
+--------------------------------
+create view myView as
+select order_date, required_date, shipped_date, ship_postal_code, company_name, contact_name, phone, last_name, first_name, title 
+from orders
+join customers on orders.customer_id = customers.customer_id
+join employees on orders.employee_id = employees.employee_id
+
+
+select * 
+from myView
+where order_date > '1997-01-01'
