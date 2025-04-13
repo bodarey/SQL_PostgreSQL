@@ -1,0 +1,7 @@
+4. Вывести ФИО сотрудников и их должности. В случае если должность = Sales Representative вывести вместо неё Sales Stuff.
+
+
+-------------------------
+
+select first_name,last_name, coalesce(nullif(title,'Sales Representative'),'sales staff' ) as description
+from employees

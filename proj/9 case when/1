@@ -1,0 +1,13 @@
+Вывести имя контакта заказчика, его город и страну, отсортировав по возрастанию 
+по имени контакта и городу,а если город равен NULL, то по имени контакта и стране.
+Проверить результат, используя заранее вставленные строки. 
+-----------------------------
+
+select contact_name, country, city
+from customers 
+order by contact_name,
+case
+	when city is not null then city 
+    else country 
+end
+

@@ -1,0 +1,13 @@
+3. Найти заказчиков, не сделавших ни одного заказа. Вывести имя заказчика и значение 'no orders' если order_id = NULL.
+
+-------------------------
+
+select distinct
+    c.company_name,
+    COALESCE(CAST(o.order_id AS VARCHAR), 'no orders') AS orders
+FROM 
+    customers c
+LEFT JOIN 
+    orders o ON o.customer_id = c.customer_id
+WHERE 
+    o.order_id IS NULL;

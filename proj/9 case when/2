@@ -1,0 +1,19 @@
+2. Вывести наименование продукта, цену продукта и столбец со значениями
+
+too expensive если цена >= 100
+
+average если цена >=50 но < 100
+
+low price если цена < 50
+
+
+-------------------------------
+
+select product_name, unit_price,
+case 
+	when unit_price >= 100 then 'too expensive'
+	when unit_price >= 50 and unit_price < 100 then 'average'
+	when unit_price < 50 then 'low price'
+	else 'unknown'
+end as description
+from products
